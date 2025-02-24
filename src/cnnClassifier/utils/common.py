@@ -17,7 +17,7 @@ from box.exceptions import BoxValueError
 from box import Box
 import tensorflow as tf
 import yaml
-from src.cnnClassifier.logger import logger
+from src.cnnClassifier import logger
 import json
 import joblib
 from box import ConfigBox
