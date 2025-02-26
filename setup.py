@@ -1,7 +1,14 @@
 import setuptools
 
-with open("Readme.md",'r',encoding="utf-8") as f:
-    long_description = f.read()
+import os
+
+readme_path = "Readme.md"
+long_description = "Project description not available."
+
+if os.path.exists(readme_path):
+    with open(readme_path, "r", encoding="utf-8") as f:
+        long_description = f.read()
+
 
 
 __version__ = "0.0.0"
