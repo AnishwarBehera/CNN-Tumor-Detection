@@ -6,7 +6,7 @@ import os
 class PredictionPipeline:
     def __init__(self,filename):
         self.filename=filename
-        self.model_path=os.path.join('artifact/training','model.h5')
+        self.model_path=os.path.join('model','model.h5')
         self.model=load_model(self.model_path)
 
     def predict(self):
