@@ -38,13 +38,15 @@ class Training:
 
         if self.config.params_is_augmentation:
             train_datagenerator = tf.keras.preprocessing.image.ImageDataGenerator(
-                rotation_range=40,
-                horizontal_flip=True,
-                width_shift_range=0.2,
-                height_shift_range=0.2,
-                shear_range=0.5,
-                zoom_range=0.5,
-                fill_mode='nearest',
+            rescale=1./255,
+            rotation_range=10,
+            # width_shift_range=0.2,
+            # height_shift_range=0.2,
+            shear_range=0.2,
+            # zoom_range=0.2,
+            horizontal_flip=True,
+            brightness_range=[0.8, 1.2],
+            fill_mode='nearest',
                 **datagenerator_kwargs
             )
         else:
@@ -63,14 +65,14 @@ class Training:
 
         early_stopping = tf.keras.callbacks.EarlyStopping(
             monitor='val_loss',
-            patience=2,
+            patience=3,
             restore_best_weights=True
         )
         lr_scheduler = tf.keras.callbacks.ReduceLROnPlateau(
         monitor='val_loss',       
         factor=0.5,               
-        patience=2,               
-        min_lr=1e-6               
+        patience=3,               
+        min_lr=0.0001               
     )
 
         self.model.fit(

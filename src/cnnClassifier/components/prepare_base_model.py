@@ -3,6 +3,7 @@ import tensorflow as tf
 from src.cnnClassifier.entity.config_entity import PrepareBaseModelConfig
 from src.cnnClassifier.utils.common import save_model
 from tensorflow.keras.metrics import Precision, Recall
+# from tensorflow.keras.applications import ResNet50
 
 
 
@@ -11,7 +12,7 @@ class PrepareBaseModel:
         self.config = config
     
     def get_base_model(self):
-        self.model = tf.keras.applications.vgg16.VGG16(
+        self.model = tf.keras.applications.ResNet50(
             input_shape=self.config.params_image_size,
             weights=self.config.params_weights,
             include_top=self.config.params_include_top
@@ -25,10 +26,10 @@ class PrepareBaseModel:
                 layer.trainable = False
         elif (freeze_till is not None) and (freeze_till > 0):
             for layer in model.layers[:-freeze_till]:
-                layer.trainable = False
+                layer.trainable = True
 
         flatten_in = tf.keras.layers.Flatten()(model.output)
-        dense_layer = tf.keras.layers.Dense(64, activation='relu', kernel_regularizer=tf.keras.regularizers.l2(0.01))(flatten_in)
+        dense_layer = tf.keras.layers.Dense(64, activation='relu', kernel_regularizer=tf.keras.regularizers.l2(0.001))(flatten_in)
         batch_norm_layer = tf.keras.layers.BatchNormalization()(dense_layer)
         dropout_layer = tf.keras.layers.Dropout(dropout_rate)(batch_norm_layer)
 
@@ -50,9 +51,8 @@ class PrepareBaseModel:
         self.full_model = self.prepare_full_model(
             model=self.model,
             classes=self.config.params_classes,  
-            freeze_all=True,
-            # freeze_till=None,
-            freeze_till=10,
+            freeze_all=False,
+            freeze_till=5,
             learning_rate=self.config.params_learning_rate,
             dropout_rate=self.config.params_dropout_rate
         )
